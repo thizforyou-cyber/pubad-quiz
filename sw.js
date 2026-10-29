@@ -1,9 +1,9 @@
-const CACHE_NAME = "pa-net-quiz-v2";
+const CACHE_NAME = "pa-net-quiz-v3";
 const APP_FILES = [
   "./",
   "./index.html",
-  "./style.css",
-  "./app.js",
+  "./style.css?v=3",
+  "./app.js?v=3",
   "./questions.js",
   "./explanations.js",
   "./manifest.json",
