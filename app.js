@@ -390,3 +390,52 @@ resetBtn.addEventListener("click", () => {
 });
 
 renderQuestion();
+
+
+const installButton = document.getElementById("install-app-btn");
+const installHelp = document.getElementById("install-help");
+let deferredInstallPrompt = null;
+
+function showInstallHelp(message) {
+  installHelp.textContent = message;
+  installHelp.hidden = false;
+}
+
+window.addEventListener("beforeinstallprompt", event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installButton.textContent = "Install app";
+  installButton.disabled = false;
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  installButton.textContent = "Installed";
+  installButton.disabled = true;
+  showInstallHelp("The quiz has been installed. Look for its icon on your Home Screen or app list.");
+});
+
+installButton.addEventListener("click", async () => {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    const choice = await deferredInstallPrompt.userChoice;
+    if (choice && choice.outcome === "accepted") {
+      showInstallHelp("Installation accepted. Finish any confirmation shown by your browser.");
+    } else {
+      showInstallHelp("Installation was cancelled. You can try again whenever you're ready.");
+    }
+    deferredInstallPrompt = null;
+    return;
+  }
+
+  const ua = navigator.userAgent || "";
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if (isStandalone) {
+    showInstallHelp("The quiz is already running as an installed app.");
+  } else if (isIOS) {
+    showInstallHelp("On iPhone/iPad: open this page in Safari, tap Share, then choose “Add to Home Screen” and tap Add.");
+  } else {
+    showInstallHelp("If your browser supports installation, open its menu (⋮) and choose “Install app” or “Add to Home screen”. If you don't see that option, open this site in Chrome and try again.");
+  }
+});
