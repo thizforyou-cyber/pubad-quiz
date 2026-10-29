@@ -1,4 +1,4 @@
-const CACHE_NAME = "pa-net-quiz-v1";
+const CACHE_NAME = "pa-net-quiz-v2";
 const APP_FILES = [
   "./",
   "./index.html",
