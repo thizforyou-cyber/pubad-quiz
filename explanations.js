@@ -285,5 +285,109 @@ const QUESTION_EXPLANATIONS = {
     },
     examTip: "Lottery method = simple random sampling = randomization.",
     related: "Probability sampling; simple random sampling; sampling frame."
+  },
+  17: {
+    topic: "IMF and environmental fiscal reform",
+    concept: "The IMF supports fiscal-policy responses to environmental problems through analysis, technical assistance and outreach. Controlling energy prices is not one of the three activities listed in this question's keyed combination.",
+    whyCorrect: "B selects i, ii and iii: analytical work, technical assistance and outreach activities.",
+    options: {
+      A: "Incorrect: it omits outreach activities (iii).",
+      B: "Correct according to the supplied key: analytical work, technical assistance and outreach.",
+      C: "Incorrect: it includes statement iv, which is not part of the keyed set.",
+      D: "Incorrect: it includes statement iv and omits analytical work."
+    },
+    examTip: "For international institutions, separate advisory/technical roles from direct control of a country's domestic prices.",
+    related: "IMF; fiscal policy; environmental taxation; energy subsidies and carbon pricing."
+  },
+  21: {
+    topic: "Second ARC: allocation of work in a State Secretariat",
+    concept: "Secretariat departments should be organised around related and reasonably homogeneous functions, with coordination mechanisms and sensible delegation to executive agencies.",
+    whyCorrect: "A includes all four statements and matches the supplied answer key.",
+    options: {
+      A: "Correct according to the supplied key: all four recommendations are selected.",
+      B: "Incorrect: omits statement iii about an in-built coordination mechanism.",
+      C: "Incorrect: omits statements i and iii.",
+      D: "Incorrect: omits statement iv about greater delegation to executive agencies/departments."
+    },
+    examTip: "Second ARC questions often test joined-up government, functional allocation, coordination and delegation.",
+    related: "Second Administrative Reforms Commission; State Secretariat; delegation; coordination."
+  },
+  25: {
+    topic: "Documents accompanying the Union Budget",
+    concept: "Budget-related parliamentary documents include the explanatory memorandum, demands for grants, Appropriation Bill and Finance Bill. The Economic Survey is presented separately from the Budget documents listed in this question.",
+    whyCorrect: "B selects statements ii, iii, iv and v, excluding statement i (Economic Survey), as in the supplied key.",
+    options: {
+      A: "Incorrect: includes the Economic Survey, which is excluded by the supplied key.",
+      B: "Correct according to the key: explanatory memorandum, demands for grants, Appropriation Bill and Finance Bill.",
+      C: "Incorrect: includes the Economic Survey and omits the Finance Bill.",
+      D: "Incorrect: includes the Economic Survey and does not give the keyed set."
+    },
+    examTip: "Distinguish the Budget documents from the Economic Survey, which is normally tabled separately before the Budget.",
+    related: "Union Budget; demands for grants; Appropriation Bill; Finance Bill; Economic Survey."
+  },
+  30: {
+    topic: "Robert S. Lynd and the purpose of science",
+    concept: "The question attributes 'Science is for life, not life for Science' to Robert S. Lynd, stressing that scientific inquiry should serve human needs rather than become an end in itself.",
+    whyCorrect: "A, Robert S. Lynd, is the answer listed in the supplied key.",
+    options: {
+      A: "Correct according to the supplied key: Robert S. Lynd.",
+      B: "Incorrect according to the supplied key: Morris Cohen is not the expected attribution.",
+      C: "Incorrect according to the supplied key: Karl Pearson is not the keyed answer here.",
+      D: "Incorrect according to the supplied key: John Dixie is not the keyed attribution."
+    },
+    examTip: "For quotation questions, pair the exact phrase with the thinker and central idea; verify quotations because exam compilations can alter wording.",
+    related: "Robert S. Lynd; social research; relevance of science to human life."
+  },
+  32: {
+    topic: "Indian public enterprises: disinvestment-era milestones",
+    concept: "The question matches four public-enterprise policy terms with years: dereservation (1991), Sick Industrial Companies Act (1985), Golden Handshake/VRS policy (1988 in this question's key), and Navratna status (1997).",
+    whyCorrect: "A gives the sequence i, iii, ii, iv for a–d, matching the supplied answer key.",
+    options: {
+      A: "Correct according to the supplied key: a–i, b–iii, c–ii, d–iv.",
+      B: "Incorrect: gives the years in the order i, ii, iii, iv, which does not match the keyed pairs.",
+      C: "Incorrect: its sequence does not match the keyed chronology.",
+      D: "Incorrect: its sequence does not match the keyed chronology."
+    },
+    examTip: "Treat year-matching questions carefully: first confirm the distinctive pair you know, then eliminate any sequence that assigns a different year to that term.",
+    related: "Public enterprises; industrial policy 1991; disinvestment; Navratna enterprises; voluntary retirement."
+  },
+  33: {
+    topic: "Objectives of disinvestment policy",
+    concept: "Disinvestment can be used to improve public-enterprise performance, release resources and support wider public priorities. The source answer key selects statements i, ii and iii, but statement iv is also worded broadly enough to overlap with common stated objectives.",
+    whyCorrect: "B is the answer in the supplied key, selecting i, ii and iii. Because statement iv ('improve effectiveness of the public sector') can also be described as a disinvestment objective in broader policy discussions, verify the original question/source before treating this key as definitive.",
+    options: {
+      A: "Not the supplied key; it includes all four statements, including iv.",
+      B: "Correct according to the supplied key: i, ii and iii.",
+      C: "Incorrect according to the key: omits statement i.",
+      D: "Incorrect according to the key: omits statement i and includes statement iv."
+    },
+    examTip: "This is a wording-sensitive item: distinguish the source's expected answer from broader policy rationales. Do not silently assume a key is flawless.",
+    related: "Disinvestment; public-sector reform; National Investment Fund; public-enterprise performance."
+  },
+  34: {
+    topic: "Wanchoo Committee and direct-tax administration",
+    concept: "The Wanchoo Committee (1971) examined direct taxation and tax evasion and is associated with recommendations concerning the organisation of direct-tax administration, including the CBDT.",
+    whyCorrect: "A, Wanchoo Committee 1971, is the answer given in the supplied key.",
+    options: {
+      A: "Correct according to the supplied key: Wanchoo Committee (1971).",
+      B: "Incorrect according to the supplied key: Estimates Committee 1991–92 is not the expected source.",
+      C: "Incorrect according to the supplied key: Choksi Committee is not the keyed answer for this recommendation.",
+      D: "Incorrect according to the supplied key: Expenditure Reforms Committee is not the expected source."
+    },
+    examTip: "Tax-reform committee questions often place Wanchoo and Choksi together as distractors. Learn the year and remit together.",
+    related: "Wanchoo Committee; Choksi Committee; CBDT; direct-tax administration."
+  },
+  35: {
+    topic: "Department of Expenditure, Ministry of Finance",
+    concept: "The Department of Expenditure oversees public-expenditure management, appraisal of major schemes and projects, expenditure controls and systems intended to improve efficiency and outcomes.",
+    whyCorrect: "The supplied key marks A (all four statements). Statement ii's attribution to the Department of Expenditure should be checked against the official allocation of business before memorising the full combination.",
+    options: {
+      A: "Marked correct by the supplied key, but statement ii should be verified against the official allocation of business.",
+      B: "Does not match the supplied key and omits statements i and iv.",
+      C: "Does not match the supplied key and omits statements i and ii.",
+      D: "Does not match the supplied key and omits statement iii."
+    },
+    examTip: "Distinguish budget and expenditure control from the Finance Commission's constitutional role; verify exact departmental responsibilities when wording is broad.",
+    related: "Ministry of Finance; Department of Expenditure; public expenditure management; Finance Commission."
   }
 };
