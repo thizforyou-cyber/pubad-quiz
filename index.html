@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173f35">
+  <title>Public Administration Quiz | UGC NET</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">PA</div>
+    <div>
+      <p class="eyebrow">UGC NET / JRF PREPARATION</p>
+      <h1>Public Administration Quiz</h1>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="welcome">
+      <div>
+        <p class="eyebrow">YOUR PRACTICE DESK</p>
+        <h2>Learn one question at a time.</h2>
+        <p class="muted">Choose a unit, answer the question, and get instant feedback.</p>
+      </div>
+      <div class="total-card"><strong id="total-count">1,000</strong><span>questions loaded</span></div>
+    </section>
+
+    <section class="controls panel">
+      <label for="unit-select">Choose a unit</label>
+      <select id="unit-select">
+        <option value="all">All units — mixed practice</option>
+      </select>
+      <label for="search-input">Find a question (optional)</label>
+      <input id="search-input" type="search" placeholder="Search a thinker, concept, keyword…">
+      <button id="reset-btn" class="button button-light" type="button">Restart practice</button>
+    </section>
+
+    <section class="quiz-layout">
+      <article class="quiz-card panel">
+        <div class="quiz-meta">
+          <span id="unit-label" class="unit-pill">Unit 1</span>
+          <span id="question-counter">Question 1 of 1,000</span>
+        </div>
+        <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+        <p id="question-text" class="question-text">Loading questions…</p>
+        <div id="options-list" class="options-list"></div>
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+        <div class="quiz-actions">
+          <button id="prev-btn" class="button button-light" type="button">← Previous</button>
+          <button id="next-btn" class="button button-primary" type="button">Next question →</button>
+        </div>
+      </article>
+
+      <aside class="side-column">
+        <section class="panel score-panel">
+          <p class="eyebrow">YOUR SESSION</p>
+          <div class="score-number" id="score-number">0</div>
+          <p class="muted">correct answers</p>
+          <div class="score-divider"></div>
+          <div class="stat-row"><span>Attempted</span><strong id="attempted-count">0</strong></div>
+          <div class="stat-row"><span>Accuracy</span><strong id="accuracy-count">0%</strong></div>
+        </section>
+        <section class="panel tips-panel">
+          <h3>Study tip</h3>
+          <p>Try answering before checking the feedback. Revisit questions you got wrong and connect the thinker, theory, committee, or constitutional article to its key idea.</p>
+        </section>
+      </aside>
+    </section>
+
+    <p class="source-note">Question wording and answer keys are taken from the PDF you uploaded. Unit allocation is automatic and may need review. If an answer key in the PDF is incorrect, this quiz will reflect that source until the key is corrected.</p>
+  </main>
+
+  <footer>Made for focused Public Administration revision.</footer>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
