@@ -12,6 +12,8 @@ const accuracyCount = document.getElementById("accuracy-count");
 const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
 const resetBtn = document.getElementById("reset-btn");
+const googleQuestionLink = document.getElementById("google-question-link");
+const learningPanel = document.getElementById("learning-panel");
 
 let filteredQuestions = [...QUESTIONS];
 let currentIndex = 0;
@@ -156,6 +158,9 @@ function renderQuestion() {
   optionsList.innerHTML = "";
   feedback.textContent = "";
   feedback.className = "feedback";
+  learningPanel.hidden = true;
+  learningPanel.innerHTML = "";
+  googleQuestionLink.href = "#";
 
   if (!filteredQuestions.length) {
     unitLabel.textContent = "No matches";
@@ -173,6 +178,7 @@ function renderQuestion() {
   unitLabel.textContent = `Unit ${q.unit} · ${UNIT_TITLES[q.unit]}`;
   questionCounter.textContent = `Question ${currentIndex + 1} of ${filteredQuestions.length}`;
   renderQuestionPrompt(q);
+  googleQuestionLink.href = googleSearchUrl(`${q.question} ${q.options.join(" ")} UGC NET Public Administration answer explanation`);
   progressBar.style.width = `${((currentIndex + 1) / filteredQuestions.length) * 100}%`;
   prevBtn.disabled = currentIndex === 0;
   nextBtn.disabled = currentIndex === filteredQuestions.length - 1;
@@ -204,8 +210,87 @@ function renderQuestion() {
     const isCorrect = saved.selected === q.answer;
     feedback.textContent = isCorrect ? "Correct! Nice work." : `Not quite. Correct answer: ${q.answer}.`;
     feedback.classList.add(isCorrect ? "good" : "bad");
+    renderLearningPanel(q, saved);
   }
   updateStats();
+}
+
+
+function googleSearchUrl(query) {
+  return "https://www.google.com/search?q=" + encodeURIComponent(query);
+}
+
+function renderLearningPanel(question, response) {
+  learningPanel.innerHTML = "";
+  learningPanel.hidden = false;
+
+  const heading = document.createElement("h3");
+  heading.className = "learning-title";
+  heading.textContent = "Learn from this question";
+  learningPanel.appendChild(heading);
+
+  const correctIndex = ["A", "B", "C", "D"].indexOf(question.answer);
+  const correctText = question.options[correctIndex] || "Answer listed in the source key";
+  const answerBox = document.createElement("div");
+  answerBox.className = "learning-answer";
+  const answerHeading = document.createElement("strong");
+  answerHeading.textContent = `Correct answer: ${question.answer}. `;
+  answerBox.append(answerHeading, document.createTextNode(correctText));
+  learningPanel.appendChild(answerBox);
+
+  const note = document.createElement("p");
+  note.className = "learning-note";
+  note.textContent = "The uploaded question bank provides the answer key but does not include a verified explanation for every option. Use the searches below to check the concept and avoid memorising an unsupported explanation.";
+  learningPanel.appendChild(note);
+
+  const listHeading = document.createElement("h4");
+  listHeading.textContent = "Option-by-option review";
+  learningPanel.appendChild(listHeading);
+
+  const list = document.createElement("div");
+  list.className = "option-review-list";
+  ["A", "B", "C", "D"].forEach((letter, index) => {
+    const optionText = question.options[index] || "";
+    const isCorrect = letter === question.answer;
+    const row = document.createElement("div");
+    row.className = "option-review" + (isCorrect ? " option-review-correct" : "");
+
+    const label = document.createElement("div");
+    label.className = "option-review-copy";
+    const title = document.createElement("strong");
+    title.textContent = `${letter}. ${optionText}`;
+    const detail = document.createElement("p");
+    detail.textContent = isCorrect
+      ? "Marked correct in the uploaded answer key. Verify the concept and why it fits the question."
+      : "Distractor option. Check the concept and why it does not best answer this specific question.";
+    label.append(title, detail);
+
+    const search = document.createElement("a");
+    search.className = "option-search-link";
+    search.target = "_blank";
+    search.rel = "noopener noreferrer";
+    search.textContent = isCorrect ? "Why correct? ↗" : "Why not? ↗";
+    search.href = googleSearchUrl(`"${optionText}" "${question.question}" Public Administration explanation`);
+
+    row.append(label, search);
+    list.appendChild(row);
+  });
+  learningPanel.appendChild(list);
+
+  const topicLink = document.createElement("a");
+  topicLink.className = "topic-search-link";
+  topicLink.target = "_blank";
+  topicLink.rel = "noopener noreferrer";
+  topicLink.href = googleSearchUrl(`${question.question} Public Administration concept thinkers theory UGC NET`);
+  topicLink.textContent = "Explore the related topic on Google ↗";
+  learningPanel.appendChild(topicLink);
+
+  if (response.selected !== question.answer) {
+    const reminder = document.createElement("p");
+    reminder.className = "learning-reminder";
+    reminder.textContent = `You selected ${response.selected}. Compare it with ${question.answer}, then review the reasoning before moving on.`;
+    learningPanel.appendChild(reminder);
+  }
 }
 
 function chooseAnswer(question, selected) {
