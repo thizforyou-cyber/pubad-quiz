@@ -29,16 +29,6 @@
       <div class="total-card"><strong id="total-count">1,000</strong><span>questions loaded</span></div>
     </section>
 
-    <section class="install-panel panel" aria-labelledby="install-title">
-      <div class="install-copy">
-        <p class="eyebrow">STUDY ON THE GO</p>
-        <h3 id="install-title">Install the quiz on your phone</h3>
-        <p class="muted">Add it to your Home Screen for an app-like experience.</p>
-      </div>
-      <button id="install-app-btn" class="button button-primary" type="button">Install app</button>
-      <p id="install-help" class="install-help" hidden></p>
-    </section>
-
     <section class="controls panel">
       <label for="unit-select">Choose a unit</label>
       <select id="unit-select">
@@ -60,6 +50,7 @@
         <a id="google-question-link" class="google-question-link" href="#" target="_blank" rel="noopener noreferrer">↗ Verify this question on Google</a>
         <div id="options-list" class="options-list"></div>
         <div id="feedback" class="feedback" aria-live="polite"></div>
+        <button id="show-learning-btn" class="button button-light show-learning-btn" type="button" hidden>Show answer explanation</button>
         <section id="learning-panel" class="learning-panel" hidden aria-live="polite"></section>
         <div class="quiz-actions">
           <button id="prev-btn" class="button button-light" type="button">← Previous</button>
@@ -81,6 +72,16 @@
           <p>Try answering before checking the feedback. Revisit questions you got wrong and connect the thinker, theory, committee, or constitutional article to its key idea.</p>
         </section>
       </aside>
+    </section>
+
+    <section class="install-panel panel" aria-labelledby="install-title">
+      <div class="install-copy">
+        <p class="eyebrow">STUDY ON THE GO</p>
+        <h3 id="install-title">Install the quiz on your phone</h3>
+        <p class="muted">Add it to your Home Screen for an app-like experience.</p>
+      </div>
+      <button id="install-app-btn" class="button button-primary" type="button">Install app</button>
+      <p id="install-help" class="install-help" hidden></p>
     </section>
 
     <p class="source-note">Question wording and answer keys are taken from the PDF you uploaded. Unit allocation is automatic and may need review. If an answer key in the PDF is incorrect, this quiz will reflect that source until the key is corrected.</p>
