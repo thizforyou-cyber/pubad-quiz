@@ -8,7 +8,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <title>Public Administration Quiz | UGC NET</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
   <header class="topbar">
@@ -50,7 +50,7 @@
         <a id="google-question-link" class="google-question-link" href="#" target="_blank" rel="noopener noreferrer">↗ Verify this question on Google</a>
         <div id="options-list" class="options-list"></div>
         <div id="feedback" class="feedback" aria-live="polite"></div>
-        <button id="show-learning-btn" class="button button-light show-learning-btn" type="button" hidden>Show answer explanation</button>
+        <button id="show-learning-btn" class="button button-light show-learning-btn" type="button" aria-controls="learning-panel" aria-expanded="false" hidden>Show answer explanation</button>
         <section id="learning-panel" class="learning-panel" hidden aria-live="polite"></section>
         <div class="quiz-actions">
           <button id="prev-btn" class="button button-light" type="button">← Previous</button>
@@ -90,7 +90,7 @@
   <footer>Made for focused Public Administration revision.</footer>
   <script src="questions.js"></script>
   <script src="explanations.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
   <script>
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
