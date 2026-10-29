@@ -144,3 +144,11 @@ footer { text-align:center; padding:18px; color:var(--muted); font-size:.8rem; b
 .learning-close-btn:hover { background:#edf1ed; }
 .show-learning-btn { margin-top:12px; }
 .show-learning-btn[hidden] { display:none; }
+
+
+/* Fix hidden controls, keep option text aligned, and preserve question line breaks */
+[hidden] { display: none !important; }
+.option > span:last-child { flex: 1 1 auto; min-width: 0; overflow-wrap: break-word; }
+.question-normal, .statement-line, .match-items li { white-space: pre-line; }
+.learning-heading-row { flex-wrap: wrap; }
+.learning-close-btn { white-space: nowrap; }
