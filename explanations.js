@@ -155,5 +155,135 @@ const QUESTION_EXPLANATIONS = {
     },
     examTip: "Constitutional article hook: 153 = Governor; 155 = appointment of Governor; 164 = State Council of Ministers; 165 = Advocate General.",
     related: "Articles 153, 155, 164 and 165; Governor; State executive; Advocate General."
+  },
+  15: {
+    topic: "British civil service conventions",
+    concept: "The classic British civil service is associated with loyalty to the government of the day, confidentiality, political neutrality and anonymity.",
+    whyCorrect: "C includes all four characteristics listed in the question.",
+    options: {
+      A: "Incorrect: omits anonymity.",
+      B: "Incorrect: omits loyalty.",
+      C: "Correct: includes loyalty, secrecy, neutrality and anonymity.",
+      D: "Incorrect: omits neutrality, a defining convention of a politically impartial civil service."
+    },
+    examTip: "Civil servants serve the elected government professionally while remaining politically impartial.",
+    related: "British civil service; neutrality; anonymity; ministerial responsibility."
+  },
+  16: {
+    topic: "UK civil-service training committees",
+    concept: "The Assheton Committee is the expected answer for the committee that first examined the role of training for UK civil servants. The Fulton Committee is associated with later, wider civil-service reform.",
+    whyCorrect: "C, Assheton Committee, matches the supplied answer key.",
+    options: {
+      A: "Incorrect: not the committee expected for this UK training question.",
+      B: "Incorrect: Brownlow is associated with US administrative reform, not this UK committee question.",
+      C: "Correct according to the supplied key: Assheton Committee.",
+      D: "Incorrect: Fulton is associated with later comprehensive civil-service reform."
+    },
+    examTip: "Pair each committee with its country, year and signature recommendation.",
+    related: "Assheton Committee; Fulton Report; civil-service training and professionalisation."
+  },
+  18: {
+    topic: "Development Administration",
+    concept: "Development Administration is change-oriented, goal-oriented and people-oriented. Unresponsiveness and preservation of the status quo conflict with its developmental purpose.",
+    whyCorrect: "D selects statements iii and iv, the two characteristics that do not fit Development Administration.",
+    options: {
+      A: "Incorrect: people-oriented administration is a recognised feature.",
+      B: "Incorrect: includes change-oriented, which is a recognised feature.",
+      C: "Incorrect: both people-oriented and change-oriented fit Development Administration.",
+      D: "Correct: unresponsiveness and promoting the status quo are inconsistent with development-oriented change."
+    },
+    examTip: "Look for change, innovation, participation, goal orientation and capacity building.",
+    related: "Edward Weidner; development administration; change orientation; administrative capacity."
+  },
+  19: {
+    topic: "First Administrative Reforms Commission",
+    concept: "The recommendation about recording major policy deviations or unclear-policy decisions in writing with reasons is attributed to the First ARC in the supplied key.",
+    whyCorrect: "A, First Administrative Reforms Commission, is the keyed answer.",
+    options: {
+      A: "Correct according to the supplied key.",
+      B: "Incorrect according to the supplied key: it attributes the recommendation to the Second ARC.",
+      C: "Incorrect: the K. Santhanam Committee is not the keyed source for this recommendation.",
+      D: "Incorrect: the key identifies a specific commission."
+    },
+    examTip: "Memorise the exact recommendation–committee pairing, not only the broad theme of administrative reform.",
+    related: "First ARC; accountability; recording reasons; administrative procedures."
+  },
+  20: {
+    topic: "Constraints on Development Administration",
+    concept: "Political instability, resource shortages and cultural barriers can constrain development administration. A committed bureaucracy is normally an enabling condition.",
+    whyCorrect: "B selects political instability, lack of resources and cultural hesitancies.",
+    options: {
+      A: "Incorrect: includes committed bureaucracy as a constraint.",
+      B: "Correct: combines political instability, lack of resources and cultural hesitancies.",
+      C: "Incorrect: includes committed bureaucracy and omits key constraints.",
+      D: "Incorrect: includes committed bureaucracy and omits lack of resources."
+    },
+    examTip: "Separate obstacles from enabling factors: stability, resources and committed officials usually support development.",
+    related: "Development administration; political stability; resources; socio-cultural context."
+  },
+  22: {
+    topic: "State Secretariat functions",
+    concept: "The State Secretariat supports the political executive through policy advice, drafting legislation and rules, and interdepartmental coordination. Detailed field implementation is generally carried out by executive agencies.",
+    whyCorrect: "C selects statements i, ii and iv, matching the supplied key.",
+    options: {
+      A: "Incorrect according to the key because it includes statement iii.",
+      B: "Incorrect because it includes statement iii and omits coordination.",
+      C: "Correct according to the key: regulatory work, drafting rules and coordination.",
+      D: "Incorrect because it includes statement iii and omits drafting legislation and rules."
+    },
+    examTip: "Secretariat = policy support, advice, rules and coordination; executive agencies = implementation.",
+    related: "State Secretariat; directorates; policy formulation; administrative coordination."
+  },
+  26: {
+    topic: "Public Accounts Committee and Estimates Committee",
+    concept: "The Public Accounts Committee scrutinises expenditure and audit findings; the Estimates Committee examines estimates and recommends economy and efficiency. Their work is complementary.",
+    whyCorrect: "A says both the assertion and reason are true and the reason explains the description of the committees as complementary/sister committees.",
+    options: {
+      A: "Correct: both statements are true and the reason explains the assertion.",
+      B: "Incorrect: complementarity does explain the relationship.",
+      C: "Incorrect: the reason is true in the context of the question.",
+      D: "Incorrect: the assertion is treated as true in the supplied key."
+    },
+    examTip: "PAC = expenditure and audit scrutiny; Estimates Committee = estimates, economy and administrative improvement.",
+    related: "Parliamentary financial control; CAG; PAC; Estimates Committee."
+  },
+  27: {
+    topic: "Contingency Fund of India",
+    concept: "Article 267 provides for the Contingency Fund, used to make advances for unforeseen expenditure pending parliamentary authorisation.",
+    whyCorrect: "A is correct in the supplied key: both statements are true, and meeting unforeseen expenditure explains the fund's purpose.",
+    options: {
+      A: "Correct: the reason explains the purpose of the fund.",
+      B: "Incorrect: the reason is explanatory, not unrelated.",
+      C: "Incorrect: the reason is true.",
+      D: "Incorrect: the assertion is treated as true in the supplied key."
+    },
+    examTip: "Article 267 = Contingency Fund. Remember that advances are later regularised through parliamentary authorisation.",
+    related: "Article 267; Contingency Fund; Consolidated Fund; parliamentary appropriation."
+  },
+  29: {
+    topic: "Facts and theory in research",
+    concept: "Facts and theories interact: evidence can initiate theories, revise existing ones, redirect their focus, and challenge theories that do not fit the evidence.",
+    whyCorrect: "D includes all four statements, matching the supplied key.",
+    options: {
+      A: "Incorrect: omits the roles of facts in redirecting and rejecting theories.",
+      B: "Incorrect: omits the reformulation of existing theory.",
+      C: "Incorrect: omits facts initiating theories.",
+      D: "Correct: all four statements describe ways facts can influence theory."
+    },
+    examTip: "Research is not one-way: evidence can generate, refine, redirect or falsify theoretical claims.",
+    related: "Research methodology; theory building; empirical evidence; falsification."
+  },
+  31: {
+    topic: "Lottery method in sampling",
+    concept: "The lottery method is a simple random sampling technique in which units are selected by a random draw.",
+    whyCorrect: "C, Randomization, is correct because the lottery method selects sample members randomly and reduces deliberate selection bias.",
+    options: {
+      A: "Incorrect: theorisation means developing theoretical explanations.",
+      B: "Incorrect: interpretation means making sense of data.",
+      C: "Correct: lottery selection is a method of randomization.",
+      D: "Incorrect: conceptualisation means clarifying or defining concepts."
+    },
+    examTip: "Lottery method = simple random sampling = randomization.",
+    related: "Probability sampling; simple random sampling; sampling frame."
   }
 };
