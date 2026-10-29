@@ -99,3 +99,23 @@ footer { text-align:center; padding:18px; color:var(--muted); font-size:.8rem; b
   .learning-panel { padding: 13px; }
   .option-review { align-items: flex-start; flex-direction: column; gap: 8px; }
 }
+
+
+/* Question-specific explanations: concept, rationale, option analysis, and exam takeaway */
+.learning-topic { margin: 10px 0 14px; color: var(--green); font-weight: 800; }
+.explanation-section { margin: 10px 0; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.explanation-section h4 { margin: 0 0 7px; color: var(--green); }
+.explanation-section p { margin: 0; line-height: 1.6; color: var(--ink); }
+.explanation-correct { border-color: #9cc5a7; background: #f0f8f1; }
+.exam-tip { border-left: 4px solid #d2a64b; }
+.explanation-pending { margin: 12px 0; padding: 14px; border: 1px solid #e3d5b4; border-radius: 10px; background: #fffaf0; }
+.explanation-pending strong { display: block; margin-bottom: 6px; color: #755719; }
+.explanation-pending p { margin: 0; color: #5e5541; font-size: .9rem; line-height: 1.55; }
+.option-review-heading { margin-top: 18px !important; }
+.option-review { align-items: flex-start; }
+.option-review-copy { flex: 1 1 auto; }
+.option-review-copy p { line-height: 1.55; }
+.option-review-correct .option-review-copy > strong { color: var(--good); }
+@media (max-width: 540px) {
+  .explanation-section, .explanation-pending { padding: 11px; }
+}
