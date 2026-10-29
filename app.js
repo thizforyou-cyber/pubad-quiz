@@ -45,8 +45,8 @@ function applyFilters() {
 function cleanPromptText(text) {
   return text
     .replace(/\s*:\s*/g, ": ")
-    .replace(/\s{2,}/g, " ")
-    .replace(/\s+([,.;:])/g, "$1")
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/[ \t]+([,.;:])/g, "$1")
     .trim();
 }
 
@@ -161,6 +161,7 @@ function renderQuestion() {
   feedback.className = "feedback";
   learningPanel.hidden = true;
   showLearningBtn.hidden = true;
+  showLearningBtn.setAttribute("aria-expanded", "false");
   learningPanel.innerHTML = "";
   googleQuestionLink.href = "#";
 
@@ -226,6 +227,7 @@ function renderLearningPanel(question, response) {
   learningPanel.innerHTML = "";
   learningPanel.hidden = false;
   showLearningBtn.hidden = true;
+  showLearningBtn.setAttribute("aria-expanded", "true");
 
   const explanation = (typeof QUESTION_EXPLANATIONS !== "undefined" && QUESTION_EXPLANATIONS[question.id])
     ? QUESTION_EXPLANATIONS[question.id]
@@ -244,6 +246,7 @@ function renderLearningPanel(question, response) {
   closeButton.addEventListener("click", () => {
     learningPanel.hidden = true;
     showLearningBtn.hidden = false;
+    showLearningBtn.setAttribute("aria-expanded", "false");
   });
   headingRow.append(heading, closeButton);
   learningPanel.appendChild(headingRow);
@@ -393,6 +396,7 @@ function moveToQuestion(index) {
 showLearningBtn.addEventListener("click", () => {
   learningPanel.hidden = false;
   showLearningBtn.hidden = true;
+  showLearningBtn.setAttribute("aria-expanded", "true");
   learningPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
 
