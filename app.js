@@ -41,14 +41,14 @@ function applyFilters() {
 
 function cleanPromptText(text) {
   return text
-    .replace(/\\s*:\\s*/g, ": ")
-    .replace(/\\s{2,}/g, " ")
-    .replace(/\\s+([,.;:])/g, "$1")
+    .replace(/\s*:\s*/g, ": ")
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s+([,.;:])/g, "$1")
     .trim();
 }
 
 function extractMatchItems(text) {
-  const marker = /(?:^|\\s)([A-D])\\.\\s*|(?:^|\\s)(iv|iii|ii|i|v)\\.\\s*/g;
+  const marker = /(?:^|\s)([A-D])\.\s*|(?:^|\s)(iv|iii|ii|i|v)\.\s*/g;
   const matches = [...text.matchAll(marker)];
   const items = { left: [], right: [] };
   if (matches.length < 4) return null;
@@ -58,8 +58,8 @@ function extractMatchItems(text) {
     const start = match.index + match[0].length;
     const end = index + 1 < matches.length ? matches[index + 1].index : text.length;
     let value = text.slice(start, end)
-      .replace(/\\b(?:List\\s*[-–]?\\s*[I1]|List\\s*[-–]?\\s*II|Authors?|Books?|Codes?)\\b/gi, "")
-      .replace(/^\\s*[:.)-]+|\\s*[:.)-]+$/g, "")
+      .replace(/\b(?:List\s*[-–]?\s*[I1]|List\s*[-–]?\s*II|Authors?|Books?|Codes?)\b/gi, "")
+      .replace(/^\s*[:.)-]+|\s*[:.)-]+$/g, "")
       .trim();
     if (!value) return;
     if (/^[A-D]$/.test(label)) items.left.push({ label, value });
@@ -75,12 +75,12 @@ function renderQuestionPrompt(question) {
   questionLabel.textContent = `Q${question.id}. `;
 
   const raw = String(question.question || "");
-  if (/match\\s+list|match\\s+the\\s+following/i.test(raw) && /list\\s*[-–]?\\s*i\\b/i.test(raw) && /list\\s*[-–]?\\s*ii\\b/i.test(raw)) {
+  if (/match\s+list|match\s+the\s+following/i.test(raw) && /list\s*[-–]?\s*i\b/i.test(raw) && /list\s*[-–]?\s*ii\b/i.test(raw)) {
     const items = extractMatchItems(raw);
     if (items) {
-      const intro = raw.slice(0, Math.max(0, raw.search(/list\\s*[-–]?\\s*i\\b/i)))
-        .replace(/match\\s+list\\s*[-–]?\\s*i\\s+with\\s+list\\s*[-–]?\\s*ii\\.?/i, "Match List I with List II.")
-        .replace(/^.*?(Match List I with List II\\.?)/i, "$1");
+      const intro = raw.slice(0, Math.max(0, raw.search(/list\s*[-–]?\s*i\b/i)))
+        .replace(/match\s+list\s*[-–]?\s*i\s+with\s+list\s*[-–]?\s*ii\.?/i, "Match List I with List II.")
+        .replace(/^.*?(Match List I with List II\.?)/i, "$1");
       const heading = document.createElement("div");
       heading.className = "question-intro";
       heading.append(questionLabel, document.createTextNode(cleanPromptText(intro) || "Match the following."));
@@ -111,9 +111,9 @@ function renderQuestionPrompt(question) {
     }
   }
 
-  const statementPattern = /(?:^|\\s)(i{1,3}|iv|v)\\.\\s+/g;
+  const statementPattern = /(?:^|\s)(i{1,3}|iv|v)\.\s+/g;
   const statements = [...raw.matchAll(statementPattern)];
-  if (/select\\s+the\\s+correct|which\\s+of\\s+the\\s+following/i.test(raw) && statements.length >= 2) {
+  if (/select\s+the\s+correct|which\s+of\s+the\s+following/i.test(raw) && statements.length >= 2) {
     const first = statements[0].index;
     const introText = cleanPromptText(raw.slice(0, first));
     const intro = document.createElement("div");
@@ -126,7 +126,7 @@ function renderQuestionPrompt(question) {
     statements.forEach((match, index) => {
       const start = match.index + match[0].length;
       const end = index + 1 < statements.length ? statements[index + 1].index : raw.length;
-      const value = cleanPromptText(raw.slice(start, end).replace(/\\bSelect the correct answer[\\s\\S]*$/i, "").replace(/\\bCodes?\\s*:?\\s*$/i, ""));
+      const value = cleanPromptText(raw.slice(start, end).replace(/\bSelect the correct answer[\s\S]*$/i, "").replace(/\bCodes?\s*:?\s*$/i, ""));
       if (!value) return;
       const line = document.createElement("div");
       line.className = "statement-line";
@@ -136,7 +136,7 @@ function renderQuestionPrompt(question) {
       list.appendChild(line);
     });
     questionText.appendChild(list);
-    const tail = raw.slice(statements[statements.length - 1].index).match(/Select the correct answer[\\s\\S]*$/i);
+    const tail = raw.slice(statements[statements.length - 1].index).match(/Select the correct answer[\s\S]*$/i);
     if (tail) {
       const note = document.createElement("div");
       note.className = "question-instruction";
