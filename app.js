@@ -224,9 +224,13 @@ function renderLearningPanel(question, response) {
   learningPanel.innerHTML = "";
   learningPanel.hidden = false;
 
+  const explanation = (typeof QUESTION_EXPLANATIONS !== "undefined" && QUESTION_EXPLANATIONS[question.id])
+    ? QUESTION_EXPLANATIONS[question.id]
+    : null;
+
   const heading = document.createElement("h3");
   heading.className = "learning-title";
-  heading.textContent = "Learn from this question";
+  heading.textContent = explanation ? "Learn from this question" : "Answer review";
   learningPanel.appendChild(heading);
 
   const correctIndex = ["A", "B", "C", "D"].indexOf(question.answer);
@@ -238,13 +242,43 @@ function renderLearningPanel(question, response) {
   answerBox.append(answerHeading, document.createTextNode(correctText));
   learningPanel.appendChild(answerBox);
 
-  const note = document.createElement("p");
-  note.className = "learning-note";
-  note.textContent = "The uploaded question bank provides the answer key but does not include a verified explanation for every option. Use the searches below to check the concept and avoid memorising an unsupported explanation.";
-  learningPanel.appendChild(note);
+  if (!explanation) {
+    const pending = document.createElement("div");
+    pending.className = "explanation-pending";
+    const pendingTitle = document.createElement("strong");
+    pendingTitle.textContent = "Detailed explanation not yet available for this question";
+    const pendingText = document.createElement("p");
+    pendingText.textContent = "I won't invent reasons for the options. This answer letter comes from the uploaded PDF's answer key; it has not been independently verified here. Use the question link below to cross-check it. The curated explanation bank is being built separately so the original questions and keys stay unchanged.";
+    pending.append(pendingTitle, pendingText);
+    learningPanel.appendChild(pending);
+  } else {
+    const topic = document.createElement("p");
+    topic.className = "learning-topic";
+    topic.textContent = `Topic: ${explanation.topic}`;
+    learningPanel.appendChild(topic);
+
+    const conceptCard = document.createElement("section");
+    conceptCard.className = "explanation-section";
+    const conceptTitle = document.createElement("h4");
+    conceptTitle.textContent = "Concept you need to know";
+    const conceptText = document.createElement("p");
+    conceptText.textContent = explanation.concept;
+    conceptCard.append(conceptTitle, conceptText);
+    learningPanel.appendChild(conceptCard);
+
+    const correctCard = document.createElement("section");
+    correctCard.className = "explanation-section explanation-correct";
+    const correctTitle = document.createElement("h4");
+    correctTitle.textContent = "Why this answer is correct";
+    const correctReason = document.createElement("p");
+    correctReason.textContent = explanation.whyCorrect;
+    correctCard.append(correctTitle, correctReason);
+    learningPanel.appendChild(correctCard);
+  }
 
   const listHeading = document.createElement("h4");
-  listHeading.textContent = "Option-by-option review";
+  listHeading.className = "option-review-heading";
+  listHeading.textContent = "Why each option is right or wrong";
   learningPanel.appendChild(listHeading);
 
   const list = document.createElement("div");
@@ -255,40 +289,64 @@ function renderLearningPanel(question, response) {
     const row = document.createElement("div");
     row.className = "option-review" + (isCorrect ? " option-review-correct" : "");
 
-    const label = document.createElement("div");
-    label.className = "option-review-copy";
+    const copy = document.createElement("div");
+    copy.className = "option-review-copy";
     const title = document.createElement("strong");
     title.textContent = `${letter}. ${optionText}`;
     const detail = document.createElement("p");
-    detail.textContent = isCorrect
-      ? "Marked correct in the uploaded answer key. Verify the concept and why it fits the question."
-      : "Distractor option. Check the concept and why it does not best answer this specific question.";
-    label.append(title, detail);
+    if (explanation && explanation.options && explanation.options[letter]) {
+      detail.textContent = explanation.options[letter];
+    } else {
+      detail.textContent = isCorrect
+        ? "This is the option marked correct in the uploaded answer key. A question-specific rationale has not yet been added, so cross-check the key before memorising it."
+        : "A question-specific reason this distractor is wrong has not yet been added. Compare it with the concept and verify it rather than relying on a generic explanation.";
+    }
+    copy.append(title, detail);
 
     const search = document.createElement("a");
     search.className = "option-search-link";
     search.target = "_blank";
     search.rel = "noopener noreferrer";
-    search.textContent = isCorrect ? "Why correct? ↗" : "Why not? ↗";
+    search.textContent = isCorrect ? "Verify answer ↗" : "Check option ↗";
     search.href = googleSearchUrl(`"${optionText}" "${question.question}" Public Administration explanation`);
 
-    row.append(label, search);
+    row.append(copy, search);
     list.appendChild(row);
   });
   learningPanel.appendChild(list);
+
+  if (explanation) {
+    const tip = document.createElement("section");
+    tip.className = "explanation-section exam-tip";
+    const tipTitle = document.createElement("h4");
+    tipTitle.textContent = "UGC NET exam trick";
+    const tipText = document.createElement("p");
+    tipText.textContent = explanation.examTip;
+    tip.append(tipTitle, tipText);
+    learningPanel.appendChild(tip);
+
+    const related = document.createElement("section");
+    related.className = "explanation-section";
+    const relatedTitle = document.createElement("h4");
+    relatedTitle.textContent = "Related concepts to revise";
+    const relatedText = document.createElement("p");
+    relatedText.textContent = explanation.related;
+    related.append(relatedTitle, relatedText);
+    learningPanel.appendChild(related);
+  }
 
   const topicLink = document.createElement("a");
   topicLink.className = "topic-search-link";
   topicLink.target = "_blank";
   topicLink.rel = "noopener noreferrer";
-  topicLink.href = googleSearchUrl(`${question.question} Public Administration concept thinkers theory UGC NET`);
-  topicLink.textContent = "Explore the related topic on Google ↗";
+  topicLink.href = googleSearchUrl(`${question.question} ${question.options.join(" ")} Public Administration UGC NET explanation`);
+  topicLink.textContent = "Verify this question and explore the topic on Google ↗";
   learningPanel.appendChild(topicLink);
 
   if (response.selected !== question.answer) {
     const reminder = document.createElement("p");
     reminder.className = "learning-reminder";
-    reminder.textContent = `You selected ${response.selected}. Compare it with ${question.answer}, then review the reasoning before moving on.`;
+    reminder.textContent = `You selected ${response.selected}. Compare it with ${question.answer}, then review each option before moving on.`;
     learningPanel.appendChild(reminder);
   }
 }
