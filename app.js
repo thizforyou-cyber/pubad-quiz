@@ -48,13 +48,13 @@ function cleanPromptText(text) {
 }
 
 function extractMatchItems(text) {
-  const marker = /(?:^|\\s)(A|B|C|D|iv|iii|ii|i|v)\\.\\s*/gi;
+  const marker = /(?:^|\\s)([A-D])\\.\\s*|(?:^|\\s)(iv|iii|ii|i|v)\\.\\s*/g;
   const matches = [...text.matchAll(marker)];
   const items = { left: [], right: [] };
   if (matches.length < 4) return null;
 
   matches.forEach((match, index) => {
-    const label = match[1];
+    const label = match[1] || match[2];
     const start = match.index + match[0].length;
     const end = index + 1 < matches.length ? matches[index + 1].index : text.length;
     let value = text.slice(start, end)
@@ -111,7 +111,7 @@ function renderQuestionPrompt(question) {
     }
   }
 
-  const statementPattern = /(?:^|\\s)(i{1,3}|iv|v)\\.\\s+/gi;
+  const statementPattern = /(?:^|\\s)(i{1,3}|iv|v)\\.\\s+/g;
   const statements = [...raw.matchAll(statementPattern)];
   if (/select\\s+the\\s+correct|which\\s+of\\s+the\\s+following/i.test(raw) && statements.length >= 2) {
     const first = statements[0].index;
