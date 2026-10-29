@@ -15,6 +15,42 @@ const resetBtn = document.getElementById("reset-btn");
 const googleQuestionLink = document.getElementById("google-question-link");
 const learningPanel = document.getElementById("learning-panel");
 const showLearningBtn = document.getElementById("show-learning-btn");
+const bookmarkBtn = document.getElementById("bookmark-btn");
+const allQuestionsBtn = document.getElementById("all-questions-btn");
+const wrongReviewBtn = document.getElementById("wrong-review-btn");
+const bookmarksReviewBtn = document.getElementById("bookmarks-review-btn");
+
+let reviewMode = "all";
+let bookmarkedIds = [];
+try {
+  const storedBookmarks = JSON.parse(localStorage.getItem("pa-net-quiz-bookmarks") || "[]");
+  if (Array.isArray(storedBookmarks)) bookmarkedIds = storedBookmarks.map(String);
+} catch (_) { bookmarkedIds = []; }
+
+function saveBookmarks() {
+  try { localStorage.setItem("pa-net-quiz-bookmarks", JSON.stringify(bookmarkedIds)); } catch (_) {}
+}
+
+function updateReviewButtons() {
+  [[allQuestionsBtn,"all"],[wrongReviewBtn,"wrong"],[bookmarksReviewBtn,"bookmarks"]].forEach(([button,mode]) => {
+    const active = reviewMode === mode;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function updateBookmarkButton(question) {
+  if (!question) {
+    bookmarkBtn.disabled = true;
+    bookmarkBtn.textContent = "☆ Bookmark question";
+    bookmarkBtn.setAttribute("aria-pressed", "false");
+    return;
+  }
+  bookmarkBtn.disabled = false;
+  const isSaved = bookmarkedIds.includes(String(question.id));
+  bookmarkBtn.textContent = isSaved ? "★ Bookmarked" : "☆ Bookmark question";
+  bookmarkBtn.setAttribute("aria-pressed", String(isSaved));
+}
 
 let filteredQuestions = [...QUESTIONS];
 let currentIndex = 0;
@@ -35,9 +71,14 @@ function applyFilters() {
   filteredQuestions = QUESTIONS.filter(q => {
     const matchesUnit = selectedUnit === "all" || q.unit === Number(selectedUnit);
     const haystack = `${q.question} ${q.options.join(" ")}`.toLowerCase();
-    return matchesUnit && (!term || haystack.includes(term));
+    const response = responses[q.id];
+    const matchesReview = reviewMode === "all"
+      || (reviewMode === "wrong" && response && !response.correct)
+      || (reviewMode === "bookmarks" && bookmarkedIds.includes(String(q.id)));
+    return matchesUnit && (!term || haystack.includes(term)) && matchesReview;
   });
   currentIndex = 0;
+  updateReviewButtons();
   renderQuestion();
 }
 
@@ -166,9 +207,14 @@ function renderQuestion() {
   googleQuestionLink.href = "#";
 
   if (!filteredQuestions.length) {
+    updateBookmarkButton(null);
     unitLabel.textContent = "No matches";
     questionCounter.textContent = "0 questions";
-    questionText.textContent = "No questions match your search. Try another keyword or select a different unit.";
+    questionText.textContent = reviewMode === "wrong"
+      ? "No incorrect answers to review yet. Answer some questions and your mistakes will appear here."
+      : reviewMode === "bookmarks"
+        ? "No bookmarked questions yet. Use ☆ Bookmark question while practising to save questions for revision."
+        : "No questions match your search. Try another keyword or select a different unit.";
     progressBar.style.width = "0%";
     prevBtn.disabled = true;
     nextBtn.disabled = true;
@@ -178,6 +224,7 @@ function renderQuestion() {
 
   const q = filteredQuestions[currentIndex];
   const saved = responses[q.id];
+  updateBookmarkButton(q);
   unitLabel.textContent = `Unit ${q.unit} · ${UNIT_TITLES[q.unit]}`;
   questionCounter.textContent = `Question ${currentIndex + 1} of ${filteredQuestions.length}`;
   renderQuestionPrompt(q);
@@ -406,12 +453,27 @@ prevBtn.addEventListener("click", () => {
 nextBtn.addEventListener("click", () => {
   if (currentIndex < filteredQuestions.length - 1) moveToQuestion(currentIndex + 1);
 });
+bookmarkBtn.addEventListener("click", () => {
+  const question = filteredQuestions[currentIndex];
+  if (!question) return;
+  const id = String(question.id);
+  if (bookmarkedIds.includes(id)) bookmarkedIds = bookmarkedIds.filter(savedId => savedId !== id);
+  else bookmarkedIds.push(id);
+  saveBookmarks();
+  updateBookmarkButton(question);
+  if (reviewMode === "bookmarks" && !bookmarkedIds.includes(id)) applyFilters();
+});
+allQuestionsBtn.addEventListener("click", () => { reviewMode = "all"; applyFilters(); });
+wrongReviewBtn.addEventListener("click", () => { reviewMode = "wrong"; applyFilters(); });
+bookmarksReviewBtn.addEventListener("click", () => { reviewMode = "bookmarks"; applyFilters(); });
+
 unitSelect.addEventListener("change", applyFilters);
 searchInput.addEventListener("input", applyFilters);
 resetBtn.addEventListener("click", () => {
   responses = {};
+  reviewMode = "all";
   currentIndex = 0;
-  renderQuestion();
+  applyFilters();
 });
 
 renderQuestion();
