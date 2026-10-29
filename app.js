@@ -14,6 +14,7 @@ const nextBtn = document.getElementById("next-btn");
 const resetBtn = document.getElementById("reset-btn");
 const googleQuestionLink = document.getElementById("google-question-link");
 const learningPanel = document.getElementById("learning-panel");
+const showLearningBtn = document.getElementById("show-learning-btn");
 
 let filteredQuestions = [...QUESTIONS];
 let currentIndex = 0;
@@ -159,6 +160,7 @@ function renderQuestion() {
   feedback.textContent = "";
   feedback.className = "feedback";
   learningPanel.hidden = true;
+  showLearningBtn.hidden = true;
   learningPanel.innerHTML = "";
   googleQuestionLink.href = "#";
 
@@ -223,6 +225,7 @@ function googleSearchUrl(query) {
 function renderLearningPanel(question, response) {
   learningPanel.innerHTML = "";
   learningPanel.hidden = false;
+  showLearningBtn.hidden = true;
 
   const explanation = (typeof QUESTION_EXPLANATIONS !== "undefined" && QUESTION_EXPLANATIONS[question.id])
     ? QUESTION_EXPLANATIONS[question.id]
@@ -231,7 +234,19 @@ function renderLearningPanel(question, response) {
   const heading = document.createElement("h3");
   heading.className = "learning-title";
   heading.textContent = explanation ? "Learn from this question" : "Answer review";
-  learningPanel.appendChild(heading);
+  const headingRow = document.createElement("div");
+  headingRow.className = "learning-heading-row";
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "learning-close-btn";
+  closeButton.textContent = "Close ×";
+  closeButton.setAttribute("aria-label", "Close answer explanation");
+  closeButton.addEventListener("click", () => {
+    learningPanel.hidden = true;
+    showLearningBtn.hidden = false;
+  });
+  headingRow.append(heading, closeButton);
+  learningPanel.appendChild(headingRow);
 
   const correctIndex = ["A", "B", "C", "D"].indexOf(question.answer);
   const correctText = question.options[correctIndex] || "Answer listed in the source key";
@@ -374,6 +389,12 @@ function moveToQuestion(index) {
     if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
+
+showLearningBtn.addEventListener("click", () => {
+  learningPanel.hidden = false;
+  showLearningBtn.hidden = true;
+  learningPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
 
 prevBtn.addEventListener("click", () => {
   if (currentIndex > 0) moveToQuestion(currentIndex - 1);
