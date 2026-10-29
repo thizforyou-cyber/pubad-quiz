@@ -132,3 +132,15 @@ footer { text-align:center; padding:18px; color:var(--muted); font-size:.8rem; b
   .install-panel { align-items:stretch; flex-direction:column; gap:12px; padding:15px; }
   .install-panel .button { width:100%; }
 }
+
+
+/* Install section sits below the quiz area */
+.install-panel { margin-top: 22px; }
+
+/* Answer explanation can be closed and reopened after an answer */
+.learning-heading-row { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.learning-heading-row .learning-title { margin:0; }
+.learning-close-btn { flex:0 0 auto; border:1px solid #d3ddd4; border-radius:8px; background:#fff; color:#40544b; padding:6px 10px; font:inherit; font-size:.82rem; font-weight:750; cursor:pointer; }
+.learning-close-btn:hover { background:#edf1ed; }
+.show-learning-btn { margin-top:12px; }
+.show-learning-btn[hidden] { display:none; }
