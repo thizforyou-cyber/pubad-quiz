@@ -365,11 +365,21 @@ function updateStats() {
   accuracyCount.textContent = answered.length ? `${Math.round((correct / answered.length) * 100)}%` : "0%";
 }
 
+function moveToQuestion(index) {
+  currentIndex = index;
+  renderQuestion();
+  // Keep the new question visible instead of leaving the reader at the bottom of the page.
+  requestAnimationFrame(() => {
+    const target = document.querySelector(".quiz-card");
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
 prevBtn.addEventListener("click", () => {
-  if (currentIndex > 0) { currentIndex--; renderQuestion(); }
+  if (currentIndex > 0) moveToQuestion(currentIndex - 1);
 });
 nextBtn.addEventListener("click", () => {
-  if (currentIndex < filteredQuestions.length - 1) { currentIndex++; renderQuestion(); }
+  if (currentIndex < filteredQuestions.length - 1) moveToQuestion(currentIndex + 1);
 });
 unitSelect.addEventListener("change", applyFilters);
 searchInput.addEventListener("input", applyFilters);
