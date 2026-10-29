@@ -1,0 +1,18 @@
+{
+  "name": "Public Administration Quiz — UGC NET/JRF",
+  "short_name": "PA NET Quiz",
+  "description": "Practice UGC NET/JRF Public Administration questions.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f3ed",
+  "theme_color": "#173f35",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
