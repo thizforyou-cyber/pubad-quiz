@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#173f35">
+  <meta name="description" content="Practice UGC NET and JRF Public Administration with 1,000 questions.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
   <title>Public Administration Quiz | UGC NET</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -24,6 +27,16 @@
         <p class="muted">Choose a unit, answer the question, and get instant feedback.</p>
       </div>
       <div class="total-card"><strong id="total-count">1,000</strong><span>questions loaded</span></div>
+    </section>
+
+    <section class="install-panel panel" aria-labelledby="install-title">
+      <div class="install-copy">
+        <p class="eyebrow">STUDY ON THE GO</p>
+        <h3 id="install-title">Install the quiz on your phone</h3>
+        <p class="muted">Add it to your Home Screen for an app-like experience.</p>
+      </div>
+      <button id="install-app-btn" class="button button-primary" type="button">Install app</button>
+      <p id="install-help" class="install-help" hidden></p>
     </section>
 
     <section class="controls panel">
@@ -77,5 +90,10 @@
   <script src="questions.js"></script>
   <script src="explanations.js"></script>
   <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+    }
+  </script>
 </body>
 </html>
