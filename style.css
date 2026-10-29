@@ -54,3 +54,24 @@ select,input { width:100%; min-height:44px; padding:10px 12px; border:1px solid 
 footer { text-align:center; padding:18px; color:var(--muted); font-size:.8rem; border-top:1px solid var(--line); }
 @media (max-width:800px) { .controls { grid-template-columns:1fr 1fr; } .controls label:nth-of-type(2) { grid-column:1; } #search-input { grid-column:2; } #reset-btn { grid-column:1/-1; } .quiz-layout { grid-template-columns:1fr; } .side-column { grid-template-columns:1fr 1fr; } }
 @media (max-width:540px) { .topbar { padding:16px; } .page { padding:20px 12px 30px; } .welcome { align-items:flex-start; } .total-card { min-width:105px; padding:12px; } .total-card strong { font-size:1.4rem; } .controls { grid-template-columns:1fr; } .controls label:nth-of-type(2), #search-input, #reset-btn { grid-column:auto; } .side-column { grid-template-columns:1fr; } .quiz-actions .button { padding:10px; font-size:.85rem; } .quiz-meta { align-items:flex-start; flex-direction:column; } }
+
+/* Clear formatting for matching, statement-based, and ordinary questions */
+.question-text { overflow-wrap: anywhere; }
+.question-number { font-weight: 800; color: var(--green); }
+.question-intro { margin-bottom: 14px; }
+.question-normal { white-space: pre-line; }
+.match-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 14px 0 8px; }
+.match-column { min-width: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fff; }
+.match-column h3 { margin: 0; padding: 10px 13px; background: #e8f0e9; color: var(--green); font-size: .92rem; }
+.match-items { margin: 0; padding: 0; list-style: none; }
+.match-items li { padding: 10px 12px; border-top: 1px solid #edf0ec; line-height: 1.5; overflow-wrap: anywhere; }
+.match-items li:first-child { border-top: 0; }
+.match-items strong { color: var(--green); }
+.statement-list { display: grid; gap: 8px; margin: 12px 0; }
+.statement-line { padding: 10px 12px; border-left: 3px solid #9bb9a5; border-radius: 0 8px 8px 0; background: #f5f8f4; line-height: 1.55; overflow-wrap: anywhere; }
+.statement-line strong { color: var(--green); }
+.question-instruction { margin-top: 10px; font-size: .95rem; color: #43574c; }
+@media (max-width: 540px) {
+  .match-grid { grid-template-columns: 1fr; gap: 10px; }
+  .match-items li, .statement-line { padding: 9px 10px; }
+}
