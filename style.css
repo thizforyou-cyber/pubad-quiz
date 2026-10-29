@@ -119,3 +119,16 @@ footer { text-align:center; padding:18px; color:var(--muted); font-size:.8rem; b
 @media (max-width: 540px) {
   .explanation-section, .explanation-pending { padding: 11px; }
 }
+
+
+/* Install-to-phone section */
+.install-panel { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:18px 20px; margin-bottom:18px; border-color:#cbdccf; background:linear-gradient(110deg,#f5faf5,#fffefa); }
+.install-copy h3 { margin:2px 0 4px; color:var(--green); font-size:1.05rem; }
+.install-copy .muted { font-size:.9rem; }
+.install-help { flex-basis:100%; margin:0; padding:12px; border-radius:9px; background:#edf4ed; color:var(--green); font-size:.88rem; }
+.install-help[hidden] { display:none; }
+.install-panel:has(.install-help:not([hidden])) { flex-wrap:wrap; }
+@media (max-width:540px) {
+  .install-panel { align-items:stretch; flex-direction:column; gap:12px; padding:15px; }
+  .install-panel .button { width:100%; }
+}
