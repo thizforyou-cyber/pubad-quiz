@@ -44,7 +44,7 @@ function applyFilters() {
 
 function cleanPromptText(text) {
   return text
-    .replace(/\s*:\s*/g, ": ")
+    .replace(/[ \t]*:[ \t]*/g, ": ")
     .replace(/[ \t]{2,}/g, " ")
     .replace(/[ \t]+([,.;:])/g, "$1")
     .trim();
