@@ -4,29 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#173f35">
+  <meta name="color-scheme" content="light">
   <meta name="description" content="Practice UGC NET and JRF Public Administration with 1,000 questions.">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <title>Public Administration Quiz | UGC NET</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <header class="topbar">
-    <div class="brand-mark">PA</div>
-    <div>
-      <p class="eyebrow">UGC NET / JRF PREPARATION</p>
-      <h1>Public Administration Quiz</h1>
+    <div class="brand-lockup">
+      <div class="brand-mark" aria-hidden="true">PA</div>
+      <div><p class="eyebrow">UGC NET / JRF PREPARATION</p><h1>Public Administration <span>Study Desk</span></h1></div>
     </div>
+    <nav class="top-nav" aria-label="Main navigation">
+      <a href="#quiz-section">Practice</a><a href="#progress-section">My progress</a><a href="#install-title">Install app</a>
+    </nav>
   </header>
 
   <main class="page">
     <section class="welcome">
       <div>
         <p class="eyebrow">YOUR PRACTICE DESK</p>
-        <h2>Learn one question at a time.</h2>
-        <p class="muted">Choose a unit, answer the question, and get instant feedback.</p>
+        <p class="welcome-kicker">YOUR PERSONAL REVISION SPACE</p>
+        <h2>Small steps. <em>Stronger recall.</em></h2>
+        <p class="muted">Practise the syllabus, understand each answer, and build exam confidence one question at a time.</p>
       </div>
-      <div class="total-card"><strong id="total-count">1,000</strong><span>questions loaded</span></div>
+      <div class="total-card"><span class="total-card-label">QUESTION BANK</span><strong id="total-count">1,000</strong><span>questions to practise</span><div class="total-card-foot"><span class="status-dot"></span> UGC NET / JRF</div></div>
     </section>
 
     <section class="controls panel">
@@ -39,7 +43,7 @@
       <button id="reset-btn" class="button button-light" type="button">Restart practice</button>
     </section>
 
-    <section class="quiz-layout">
+    <section class="quiz-layout" id="quiz-section">
       <article class="quiz-card panel">
         <div class="quiz-meta">
           <span id="unit-label" class="unit-pill">Unit 1</span>
@@ -49,9 +53,16 @@
         <div id="question-text" class="question-text">Loading questions…</div>
         <a id="google-question-link" class="google-question-link" href="#" target="_blank" rel="noopener noreferrer">↗ Verify this question on Google</a>
         <div id="options-list" class="options-list"></div>
+        <div class="question-tools" aria-label="Question tools"><button id="bookmark-btn" class="button button-light tool-button" type="button" aria-pressed="false">☆ Bookmark question</button><span class="tool-hint">Save tricky questions for revision</span></div>
         <div id="feedback" class="feedback" aria-live="polite"></div>
         <button id="show-learning-btn" class="button button-light show-learning-btn" type="button" aria-controls="learning-panel" aria-expanded="false" hidden>Show answer explanation</button>
         <section id="learning-panel" class="learning-panel" hidden aria-live="polite"></section>
+        <div class="review-toolbar" aria-label="Revision filters">
+          <span class="review-toolbar-label">REVISION MODE</span>
+          <button id="all-questions-btn" class="filter-chip is-active" type="button" aria-pressed="true">All questions</button>
+          <button id="wrong-review-btn" class="filter-chip" type="button" aria-pressed="false">Wrong answers</button>
+          <button id="bookmarks-review-btn" class="filter-chip" type="button" aria-pressed="false">Bookmarks</button>
+        </div>
         <div class="quiz-actions">
           <button id="prev-btn" class="button button-light" type="button">← Previous</button>
           <button id="next-btn" class="button button-primary" type="button">Next question →</button>
@@ -59,7 +70,7 @@
       </article>
 
       <aside class="side-column">
-        <section class="panel score-panel">
+        <section class="panel score-panel" id="progress-section">
           <p class="eyebrow">YOUR SESSION</p>
           <div class="score-number" id="score-number">0</div>
           <p class="muted">correct answers</p>
@@ -90,7 +101,7 @@
   <footer>Made for focused Public Administration revision.</footer>
   <script src="questions.js"></script>
   <script src="explanations.js"></script>
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
   <script>
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
