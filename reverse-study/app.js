@@ -105,9 +105,7 @@
       stats[q.id] = result; writeJSON(STORAGE.stats, stats); refreshCounts();
     }
     $("#questionArea").querySelectorAll(".option").forEach(btn => {
-      const i = Number(btn.dataset.index);
-      btn.classList.toggle("correct", correct >= 0 && i === correct);
-      btn.classList.toggle("wrong", i === index && correct >= 0 && i !== correct);
+      btn.classList.toggle("selected", Number(btn.dataset.index) === index);
     });
   }
   function optionExplanation(q, letter, index, correct) {
