@@ -1,5 +1,5 @@
-const CACHE = "pa-reverse-study-v1";
-const ASSETS = ["./", "./index.html", "./style.css", "./app.js", "../questions.js", "./manifest.json"];
+const CACHE = "pa-reverse-study-v2";
+const ASSETS = ["./", "./index.html", "./style.css", "./app.js", "../questions.js", "./manifest.json", "./icon.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
