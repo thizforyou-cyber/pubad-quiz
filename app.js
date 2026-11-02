@@ -114,100 +114,140 @@ function extractMatchItems(text) {
 }
 
 function renderQuestionPrompt(question) {
+  // This function controls only the question prompt. Options, answers, scoring,
+  // navigation, explanations, and the rest of the page are deliberately untouched.
   questionText.innerHTML = "";
-  const questionLabel = document.createElement("span");
-  questionLabel.className = "question-number";
-  questionLabel.textContent = "Q" + question.id + ". ";
+  const raw = String(question.question || "").replace(/\s+/g, " ").trim();
+  const label = document.createElement("span");
+  label.className = "question-number";
+  label.textContent = "Q" + question.id + ". ";
 
-  const raw = String(question.question || "");
-  const isMatchQuestion = /match\s+(?:list|the\s+following)|match\s+the\s+following/i.test(raw)
+  function addIntro(text) {
+    const intro = document.createElement("div");
+    intro.className = "question-intro";
+    intro.append(label, document.createTextNode(cleanPromptText(text)));
+    questionText.appendChild(intro);
+  }
+
+  function addInstruction(text) {
+    const cleaned = cleanPromptText(text);
+    if (!cleaned) return;
+    const note = document.createElement("div");
+    note.className = "question-instruction";
+    note.textContent = cleaned;
+    questionText.appendChild(note);
+  }
+
+  // Match-the-following: show the two lists as aligned, readable columns.
+  const isMatchQuestion = /match\s+(?:list|the\s+following)/i.test(raw)
     && /list\s*[-–]?\s*I\b/i.test(raw)
     && /list\s*[-–]?\s*II\b/i.test(raw);
-
   if (isMatchQuestion) {
     const items = extractMatchItems(raw);
     if (items) {
       const listOneMatches = [...raw.matchAll(/List\s*[-–]?\s*I\b/gi)];
       const listOne = listOneMatches[listOneMatches.length - 1];
-      const introText = cleanPromptText(raw.slice(0, listOne.index)
-        .replace(/match\s+(?:list\s*[-–]?\s*I\s+with\s+list\s*[-–]?\s*II|the\s+following)[\s\S]*$/i, "Match List I with List II."));
-      const heading = document.createElement("div");
-      heading.className = "question-intro";
-      heading.append(questionLabel, document.createTextNode(introText || "Match List I with List II."));
-      questionText.appendChild(heading);
+      const introText = raw.slice(0, listOne.index)
+        .replace(/match\s+(?:list\s*[-–]?\s*I\s+with\s+list\s*[-–]?\s*II|the\s+following)[\s\S]*$/i, "Match List I with List II.");
+      addIntro(introText || "Match List I with List II.");
 
       const grid = document.createElement("div");
       grid.className = "match-grid";
       [["List I", items.left], ["List II", items.right]].forEach(([title, list]) => {
         const column = document.createElement("section");
         column.className = "match-column";
-        const columnTitle = document.createElement("h3");
-        columnTitle.textContent = title;
-        column.appendChild(columnTitle);
+        const heading = document.createElement("h3");
+        heading.textContent = title;
+        column.appendChild(heading);
         const listEl = document.createElement("ol");
         listEl.className = "match-items";
         list.forEach(item => {
           const li = document.createElement("li");
-          const label = document.createElement("strong");
-          label.textContent = item.label + ". ";
-          li.append(label, document.createTextNode(item.value));
+          const marker = document.createElement("strong");
+          marker.textContent = item.label + ". ";
+          li.append(marker, document.createTextNode(item.value));
           listEl.appendChild(li);
         });
         column.appendChild(listEl);
         grid.appendChild(column);
       });
       questionText.appendChild(grid);
-      const instruction = raw.match(/Select\s+the\s+correct[\s\S]*$/i);
-      if (instruction) {
-        const note = document.createElement("div");
-        note.className = "question-instruction";
-        note.textContent = cleanPromptText(instruction[0]);
-        questionText.appendChild(note);
-      }
+      const codeAt = raw.search(/\bCodes?\s*:/i);
+      if (codeAt >= 0) addInstruction(raw.slice(codeAt));
       return;
     }
   }
 
-  const statementPattern = /(?:^|\s)(?:\((iv|iii|ii|i|v)\)|(iv|iii|ii|i|v)\.)\s+/gi;
-  const statements = [...raw.matchAll(statementPattern)];
-  if (/select\s+the\s+correct|which\s+of\s+the\s+following|select\s+the\s+characteristics/i.test(raw) && statements.length >= 2) {
-    const first = statements[0].index;
-    const introText = cleanPromptText(raw.slice(0, first));
-    const intro = document.createElement("div");
-    intro.className = "question-intro";
-    intro.append(questionLabel, document.createTextNode(introText));
-    questionText.appendChild(intro);
+  // Statement lists in all common exam formats: i./ii., (i)/(ii),
+  // (a)/(b), A./B., and (1)/(2). Require multiple explicit markers.
+  const markerPattern = /(?:\((?<romanParen>iv|iii|ii|i|v)\)|(?<![A-Za-z])(?<romanPlain>iv|iii|ii|i|v)\.\.?|\((?<letterParen>[a-d])\)|(?<![A-Za-z])(?<letterPlain>[a-d])\.\s*|\((?<numberParen>\d{1,2})\)|(?<!\d)(?<numberPlain>\d{1,2})[.)]\s*)/gi;
+  const markers = [...raw.matchAll(markerPattern)];
+  const validGroups = [
+    ["romanParen", "romanPlain"],
+    ["letterParen", "letterPlain"],
+    ["numberParen", "numberPlain"]
+  ];
+  let selected = null;
+  for (const group of validGroups) {
+    const found = markers.filter(m => group.some(k => m.groups[k]));
+    if (found.length >= 2) { selected = found; break; }
+  }
 
+  if (selected) {
+    const first = selected[0].index;
+    addIntro(raw.slice(0, first));
     const list = document.createElement("div");
     list.className = "statement-list";
-    statements.forEach((match, index) => {
-      const start = match.index + match[0].length;
-      const end = index + 1 < statements.length ? statements[index + 1].index : raw.length;
-      const value = cleanPromptText(raw.slice(start, end)
-        .replace(/\bSelect the correct answer[\s\S]*$/i, "")
-        .replace(/\bCodes?\s*:?\s*$/i, ""));
+    selected.forEach((match, index) => {
+      const from = match.index + match[0].length;
+      const to = index + 1 < selected.length ? selected[index + 1].index : raw.length;
+      let value = raw.slice(from, to);
+      value = value.replace(/\b(?:Select|Choose) the (?:most appropriate |correct )?answer[\s\S]*$/i, "");
+      value = value.replace(/\bCodes?\s*:?\s*$/i, "");
+      value = cleanPromptText(value);
       if (!value) return;
-      const line = document.createElement("div");
-      line.className = "statement-line";
+      const row = document.createElement("div");
+      row.className = "statement-line";
       const marker = document.createElement("strong");
-      marker.textContent = (match[1] || match[2]).toLowerCase() + ". ";
-      line.append(marker, document.createTextNode(value));
-      list.appendChild(line);
+      const markerValue = match.groups.romanParen || match.groups.romanPlain ||
+        match.groups.letterParen || match.groups.letterPlain ||
+        match.groups.numberParen || match.groups.numberPlain;
+      marker.textContent = markerValue.toLowerCase() + ". ";
+      row.append(marker, document.createTextNode(value));
+      list.appendChild(row);
     });
     questionText.appendChild(list);
-    const tail = raw.match(/Select the correct answer[\s\S]*$/i);
-    if (tail) {
-      const note = document.createElement("div");
-      note.className = "question-instruction";
-      note.textContent = cleanPromptText(tail[0]);
-      questionText.appendChild(note);
-    }
+    const instructionAt = raw.search(/\b(?:Select|Choose) the (?:most appropriate |correct )?answer/i);
+    if (instructionAt >= 0) addInstruction(raw.slice(instructionAt));
     return;
   }
 
+  // Assertion/reason questions: keep both parts visually distinct.
+  const assertion = /Assertion\s*\(\s*A\s*\)\s*:/i.exec(raw);
+  const reason = /Reason\s*\(\s*R\s*\)\s*:/i.exec(raw);
+  if (assertion && reason && reason.index > assertion.index) {
+    addIntro(raw.slice(0, assertion.index));
+    const parts = [
+      ["Assertion (A)", raw.slice(assertion.index + assertion[0].length, reason.index)],
+      ["Reason (R)", raw.slice(reason.index + reason[0].length).replace(/\bCodes?\s*:?\s*$/i, "")]
+    ];
+    parts.forEach(([heading, value]) => {
+      const row = document.createElement("div");
+      row.className = "statement-line";
+      const strong = document.createElement("strong");
+      strong.textContent = heading + ": ";
+      row.append(strong, document.createTextNode(cleanPromptText(value)));
+      questionText.appendChild(row);
+    });
+    if (/\bCodes?\s*:/i.test(raw)) addInstruction("Choose the correct answer from the codes.");
+    return;
+  }
+
+  // Ordinary questions remain verbatim in meaning, but are spaced and wrapped
+  // cleanly inside the question area.
   const normal = document.createElement("div");
   normal.className = "question-normal";
-  normal.append(questionLabel, document.createTextNode(cleanPromptText(raw)));
+  normal.append(label, document.createTextNode(cleanPromptText(raw)));
   questionText.appendChild(normal);
 }
 
