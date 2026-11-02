@@ -92,42 +92,52 @@ function cleanPromptText(text) {
 }
 
 function extractMatchItems(text) {
-  const marker = /(?:^|\s)([A-D])\.\s*|(?:^|\s)(iv|iii|ii|i|v)\.\s*/g;
-  const matches = [...text.matchAll(marker)];
-  const items = { left: [], right: [] };
-  if (matches.length < 4) return null;
+  const listOne = /List\s*[-–]?\s*I\b/i.exec(text);
+  const listTwo = /List\s*[-–]?\s*II\b/i.exec(text);
+  if (!listOne || !listTwo || listTwo.index <= listOne.index) return null;
 
-  matches.forEach((match, index) => {
-    const label = match[1] || match[2];
-    const start = match.index + match[0].length;
-    const end = index + 1 < matches.length ? matches[index + 1].index : text.length;
-    let value = text.slice(start, end)
-      .replace(/\b(?:List\s*[-–]?\s*[I1]|List\s*[-–]?\s*II|Authors?|Books?|Codes?)\b/gi, "")
-      .replace(/^\s*[:.)-]+|\s*[:.)-]+$/g, "")
-      .trim();
-    if (!value) return;
-    if (/^[A-D]$/.test(label)) items.left.push({ label, value });
-    else items.right.push({ label: label.toLowerCase(), value });
-  });
-  return items.left.length >= 2 && items.right.length >= 2 ? items : null;
+  const leftText = text.slice(listOne.index + listOne[0].length, listTwo.index)
+    .replace(/^\s*[\(:-]?\s*(?:Authors?|Books?|Codes?|Concepts?|Features?|Dates?|Years?|Names?|Works?|Persons?|Committees?|Schemes?|Institutions?|Countries?|Theories?|Thinkers?|Principles?|Characteristics?|Mediums?)\s*[\):.-]?\s*/i, "");
+  const rightStart = listTwo.index + listTwo[0].length;
+  const rightText = text.slice(rightStart).split(/\bCodes?\s*:/i)[0]
+    .replace(/^\s*[\(:-]?\s*(?:Authors?|Books?|Codes?|Concepts?|Features?|Dates?|Years?|Names?|Works?|Persons?|Committees?|Schemes?|Institutions?|Countries?|Theories?|Thinkers?|Principles?|Characteristics?|Mediums?)\s*[\):.-]?\s*/i, "");
+
+  function readItems(source, pattern, groupNames) {
+    const matches = [...source.matchAll(pattern)];
+    return matches.map((match, index) => {
+      const label = groupNames.map(name => match.groups?.[name]).find(Boolean);
+      const from = match.index + match[0].length;
+      const to = index + 1 < matches.length ? matches[index + 1].index : source.length;
+      const value = cleanPromptText(source.slice(from, to).replace(/^\s*[:.)-]+|\s*[:.)-]+$/g, ""));
+      return value ? { label: label.toLowerCase(), value } : null;
+    }).filter(Boolean);
+  }
+
+  const left = readItems(leftText, /(?:\((?<paren>[A-Da-d])\)|(?<![A-Za-z])(?<plain>[A-Da-d])\.)\s*/g, ["paren", "plain"]);
+  const right = readItems(rightText, /(?:\((?<paren>iv|iii|ii|i|v)\)|(?<![A-Za-z])(?<plain>iv|iii|ii|i|v)\.)\s*/gi, ["paren", "plain"]);
+  return left.length >= 2 && right.length >= 2 ? { left, right } : null;
 }
 
 function renderQuestionPrompt(question) {
   questionText.innerHTML = "";
   const questionLabel = document.createElement("span");
   questionLabel.className = "question-number";
-  questionLabel.textContent = `Q${question.id}. `;
+  questionLabel.textContent = "Q" + question.id + ". ";
 
   const raw = String(question.question || "");
-  if (/match\s+list|match\s+the\s+following/i.test(raw) && /list\s*[-–]?\s*i\b/i.test(raw) && /list\s*[-–]?\s*ii\b/i.test(raw)) {
+  const isMatchQuestion = /match\s+(?:list|the\s+following)|match\s+the\s+following/i.test(raw)
+    && /list\s*[-–]?\s*I\b/i.test(raw)
+    && /list\s*[-–]?\s*II\b/i.test(raw);
+
+  if (isMatchQuestion) {
     const items = extractMatchItems(raw);
     if (items) {
-      const intro = raw.slice(0, Math.max(0, raw.search(/list\s*[-–]?\s*i\b/i)))
-        .replace(/match\s+list\s*[-–]?\s*i\s+with\s+list\s*[-–]?\s*ii\.?/i, "Match List I with List II.")
-        .replace(/^.*?(Match List I with List II\.?)/i, "$1");
+      const listOne = /List\s*[-–]?\s*I\b/i.exec(raw);
+      const introText = cleanPromptText(raw.slice(0, listOne.index)
+        .replace(/match\s+(?:list\s*[-–]?\s*I\s+with\s+list\s*[-–]?\s*II|the\s+following)[\s\S]*$/i, "Match List I with List II."));
       const heading = document.createElement("div");
       heading.className = "question-intro";
-      heading.append(questionLabel, document.createTextNode(cleanPromptText(intro) || "Match the following."));
+      heading.append(questionLabel, document.createTextNode(introText || "Match List I with List II."));
       questionText.appendChild(heading);
 
       const grid = document.createElement("div");
@@ -144,20 +154,27 @@ function renderQuestionPrompt(question) {
           const li = document.createElement("li");
           const label = document.createElement("strong");
           label.textContent = item.label + ". ";
-          li.append(label, document.createTextNode(cleanPromptText(item.value)));
+          li.append(label, document.createTextNode(item.value));
           listEl.appendChild(li);
         });
         column.appendChild(listEl);
         grid.appendChild(column);
       });
       questionText.appendChild(grid);
+      const instruction = raw.match(/Select\s+the\s+correct[\s\S]*$/i);
+      if (instruction) {
+        const note = document.createElement("div");
+        note.className = "question-instruction";
+        note.textContent = cleanPromptText(instruction[0]);
+        questionText.appendChild(note);
+      }
       return;
     }
   }
 
-  const statementPattern = /(?:^|\s)(i{1,3}|iv|v)\.\s+/g;
+  const statementPattern = /(?:^|\s)(?:\((iv|iii|ii|i|v)\)|(iv|iii|ii|i|v)\.)\s+/gi;
   const statements = [...raw.matchAll(statementPattern)];
-  if (/select\s+the\s+correct|which\s+of\s+the\s+following/i.test(raw) && statements.length >= 2) {
+  if (/select\s+the\s+correct|which\s+of\s+the\s+following|select\s+the\s+characteristics/i.test(raw) && statements.length >= 2) {
     const first = statements[0].index;
     const introText = cleanPromptText(raw.slice(0, first));
     const intro = document.createElement("div");
@@ -170,17 +187,19 @@ function renderQuestionPrompt(question) {
     statements.forEach((match, index) => {
       const start = match.index + match[0].length;
       const end = index + 1 < statements.length ? statements[index + 1].index : raw.length;
-      const value = cleanPromptText(raw.slice(start, end).replace(/\bSelect the correct answer[\s\S]*$/i, "").replace(/\bCodes?\s*:?\s*$/i, ""));
+      const value = cleanPromptText(raw.slice(start, end)
+        .replace(/\bSelect the correct answer[\s\S]*$/i, "")
+        .replace(/\bCodes?\s*:?\s*$/i, ""));
       if (!value) return;
       const line = document.createElement("div");
       line.className = "statement-line";
       const marker = document.createElement("strong");
-      marker.textContent = match[1].toLowerCase() + ". ";
+      marker.textContent = (match[1] || match[2]).toLowerCase() + ". ";
       line.append(marker, document.createTextNode(value));
       list.appendChild(line);
     });
     questionText.appendChild(list);
-    const tail = raw.slice(statements[statements.length - 1].index).match(/Select the correct answer[\s\S]*$/i);
+    const tail = raw.match(/Select the correct answer[\s\S]*$/i);
     if (tail) {
       const note = document.createElement("div");
       note.className = "question-instruction";
