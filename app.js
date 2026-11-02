@@ -92,8 +92,10 @@ function cleanPromptText(text) {
 }
 
 function extractMatchItems(text) {
-  const listOne = /List\s*[-–]?\s*I\b/i.exec(text);
-  const listTwo = /List\s*[-–]?\s*II\b/i.exec(text);
+  const listOneMatches = [...text.matchAll(/List\s*[-–]?\s*I\b/gi)];
+  const listTwoMatches = [...text.matchAll(/List\s*[-–]?\s*II\b/gi)];
+  const listOne = listOneMatches[listOneMatches.length - 1];
+  const listTwo = listTwoMatches[listTwoMatches.length - 1];
   if (!listOne || !listTwo || listTwo.index <= listOne.index) return null;
 
   const leftText = text.slice(listOne.index + listOne[0].length, listTwo.index)
@@ -132,7 +134,8 @@ function renderQuestionPrompt(question) {
   if (isMatchQuestion) {
     const items = extractMatchItems(raw);
     if (items) {
-      const listOne = /List\s*[-–]?\s*I\b/i.exec(raw);
+      const listOneMatches = [...raw.matchAll(/List\s*[-–]?\s*I\b/gi)];
+      const listOne = listOneMatches[listOneMatches.length - 1];
       const introText = cleanPromptText(raw.slice(0, listOne.index)
         .replace(/match\s+(?:list\s*[-–]?\s*I\s+with\s+list\s*[-–]?\s*II|the\s+following)[\s\S]*$/i, "Match List I with List II."));
       const heading = document.createElement("div");
