@@ -92,32 +92,25 @@ function cleanPromptText(text) {
 }
 
 function extractMatchItems(text) {
-  const listOneMatches = [...text.matchAll(/List\s*[-–]?\s*I\b/gi)];
-  const listTwoMatches = [...text.matchAll(/List\s*[-–]?\s*II\b/gi)];
-  const listOne = listOneMatches[listOneMatches.length - 1];
-  const listTwo = listTwoMatches[listTwoMatches.length - 1];
-  if (!listOne || !listTwo || listTwo.index <= listOne.index) return null;
+  // Match labels are interleaved in the source: A. item, i. item, B. item, ii. item.
+  // Accept both A-D / i-iv and (a)-(d) / (i)-(iv) label styles.
+  const marker = /(?:\((?<letterParen>[A-Da-d])\)|(?<![A-Za-z])(?<letterPlain>[A-Da-d])\.)|(?:\((?<romanParen>iv|iii|ii|i|v)\)|(?<![A-Za-z])(?<romanPlain>iv|iii|ii|i|v)\.)/gi;
+  const matches = [...text.matchAll(marker)];
+  const items = { left: [], right: [] };
+  if (matches.length < 4) return null;
 
-  const leftText = text.slice(listOne.index + listOne[0].length, listTwo.index)
-    .replace(/^\s*[\(:-]?\s*(?:Authors?|Books?|Codes?|Concepts?|Features?|Dates?|Years?|Names?|Works?|Persons?|Committees?|Schemes?|Institutions?|Countries?|Theories?|Thinkers?|Principles?|Characteristics?|Mediums?)\s*[\):.-]?\s*/i, "");
-  const rightStart = listTwo.index + listTwo[0].length;
-  const rightText = text.slice(rightStart).split(/\bCodes?\s*:/i)[0]
-    .replace(/^\s*[\(:-]?\s*(?:Authors?|Books?|Codes?|Concepts?|Features?|Dates?|Years?|Names?|Works?|Persons?|Committees?|Schemes?|Institutions?|Countries?|Theories?|Thinkers?|Principles?|Characteristics?|Mediums?)\s*[\):.-]?\s*/i, "");
-
-  function readItems(source, pattern, groupNames) {
-    const matches = [...source.matchAll(pattern)];
-    return matches.map((match, index) => {
-      const label = groupNames.map(name => match.groups?.[name]).find(Boolean);
-      const from = match.index + match[0].length;
-      const to = index + 1 < matches.length ? matches[index + 1].index : source.length;
-      const value = cleanPromptText(source.slice(from, to).replace(/^\s*[:.)-]+|\s*[:.)-]+$/g, ""));
-      return value ? { label: label.toLowerCase(), value } : null;
-    }).filter(Boolean);
-  }
-
-  const left = readItems(leftText, /(?:\((?<paren>[A-Da-d])\)|(?<![A-Za-z])(?<plain>[A-Da-d])\.)\s*/g, ["paren", "plain"]);
-  const right = readItems(rightText, /(?:\((?<paren>iv|iii|ii|i|v)\)|(?<![A-Za-z])(?<plain>iv|iii|ii|i|v)\.)\s*/gi, ["paren", "plain"]);
-  return left.length >= 2 && right.length >= 2 ? { left, right } : null;
+  matches.forEach((match, index) => {
+    const letter = match.groups.letterParen || match.groups.letterPlain;
+    const roman = match.groups.romanParen || match.groups.romanPlain;
+    const start = match.index + match[0].length;
+    const end = index + 1 < matches.length ? matches[index + 1].index : text.length;
+    const value = cleanPromptText(text.slice(start, end)
+      .replace(/^\s*[\(:.-]+|\s*[\):.-]+$/g, ""));
+    if (!value) return;
+    if (letter) items.left.push({ label: letter.toLowerCase(), value });
+    else if (roman) items.right.push({ label: roman.toLowerCase(), value });
+  });
+  return items.left.length >= 2 && items.right.length >= 2 ? items : null;
 }
 
 function renderQuestionPrompt(question) {
